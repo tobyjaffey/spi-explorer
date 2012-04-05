@@ -1,0 +1,63 @@
+Serial SPI Explorer
+===================
+
+A serial port SPI interface for the TI Launchpad. Following the Bus Pirate command syntax.
+
+[   assert chip select
+]   deassert chip select
+<number>    write byte (0x/h prefix for hex 0b/b prefix for binary)
+r   read a byte
+:n  repeat command n times
+
+Eg.
+
+[ b111:4 0x20 10:2 r:64 ]
+    Assert CS
+    Write 7 7 7 7
+    Write 32
+    Write 10 10
+    Read 64 bytes
+    Deassert CS
+
+Example
+-------
+Controlling a Microchip MCP23S17 SPI 16-bit I/O expander:
+
+MCP23S17  | Launchpad
+----------|----------
+VDD       | VCC
+VSS       | GND
+SO        | MISO (P1.7)
+SI        | MOSI (P1.6)
+CS        | CS (P1.4)
+SCK       | SCLK (P1.5)
+Reset     | VCC
+
+Wire LEDs to the 8 GPIOA lines.
+
+Initialise the chip for non-sequential access:
+[0x40 0x0A 0x28]    # WR_REG(0) IOCONA      SEQ_OFF|HAEN
+
+Set all of PORTA as outputs:
+[0x40 0x00 0x00]    # WR_REG(0) GPIOADIR    ALL_OUTPUT
+
+Set a pattern on GPIOA LEDs
+[0x40 0x12 b10000001]    # WR_REG(0) GPIOA       GPIOA-0
+
+Serial port
+-----------
+TX on P1.1
+RX on P1.2
+9600bps 8-N-1
+
+SPI 
+---
+Chip Select P1.4
+MOSI P1.6
+MISO P1.7
+SCLK P1.5
+
+--
+Joby Taffey <jrt@hodgepig.org>
+http://blog.hodgepig.org
+
