@@ -30,25 +30,15 @@ BOOL memstrcmp(const uint8_t *start, const uint8_t *end, const char *str)
 }
 
 // hex nibble to int
-static uint8_t digit_to_int(uint8_t ch)
+static int8_t digit_to_int(int8_t ch)
 {
-    uint8_t r;
-    if (ch >= 'a')
-        r = 'a' - 10;
-    else
-    {
-        if (ch >= 'A')
-            r = 'A' - 10;
-        else
-        {
-            if (ch <= '9')
-                r = '0';
-            else
-                r = 0;
-        }
-    }
-
-    return ch - r;
+    ch -= '0';
+    if (ch < 0)
+        return 127; // overflow
+    if (ch < 10)
+        return ch;
+    ch &= ~0x20;
+    return ch - 7;
 }
 
 // parse binary, hex and decimal numbers
