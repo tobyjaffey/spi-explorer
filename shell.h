@@ -19,7 +19,7 @@
 #include "common.h"
 
 void shell_init(void);
-void shell_eval(const uint8_t *str, uint32_t len);
+void shell_eval(const uint8_t *str, uint16_t len);
 
 #endif
 

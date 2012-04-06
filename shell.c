@@ -65,9 +65,9 @@ static void bus_spi_read(void)
 
 static BOOL handle_command(const uint8_t *start, const uint8_t *end, BOOL firstToken, const uint8_t *line_end)
 {
-    uint32_t num;
+    uint16_t num;
     const uint8_t *ptr = start;
-    uint32_t repeat = 1;
+    uint16_t repeat = 1;
 
     // handle repeat commands, A:5
     while(ptr != end)
@@ -113,7 +113,7 @@ static BOOL handle_command(const uint8_t *start, const uint8_t *end, BOOL firstT
 }
 
 
-void shell_eval(const uint8_t *str, uint32_t len)
+void shell_eval(const uint8_t *str, uint16_t len)
 {
     uint8_t state = STATE_SEARCHING;
     uint8_t c;
