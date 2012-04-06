@@ -21,7 +21,7 @@
 
 BOOL memstrcmp(const uint8_t *start, const uint8_t *end, const char *str)
 {
-    uint32_t len = strlen(str);
+    uint16_t len = strlen(str);
 
     if (len != end-start)
         return FALSE;
@@ -30,29 +30,19 @@ BOOL memstrcmp(const uint8_t *start, const uint8_t *end, const char *str)
 }
 
 // hex nibble to int
-static uint8_t digit_to_int(uint8_t ch)
+static int8_t digit_to_int(int8_t ch)
 {
-    uint8_t r;
-    if (ch >= 'a')
-        r = 'a' - 10;
-    else
-    {
-        if (ch >= 'A')
-            r = 'A' - 10;
-        else
-        {
-            if (ch <= '9')
-                r = '0';
-            else
-                r = 0;
-        }
-    }
-
-    return ch - r;
+    ch -= '0';
+    if (ch < 0)
+        return 127; // overflow
+    if (ch < 10)
+        return ch;
+    ch &= ~0x20;
+    return ch - 7;
 }
 
 // parse binary, hex and decimal numbers
-BOOL parse_number(const uint8_t *str, uint8_t len, uint32_t *result)
+BOOL parse_number(const uint8_t *str, uint8_t len, uint16_t *result)
 {
     uint8_t base = 10;
     uint8_t i;
@@ -133,7 +123,7 @@ BOOL tok(uint8_t const **tok_start, uint8_t const **tok_end, const uint8_t *line
 }
 
 // advance tok_start/tok_end to next token and read number value into i
-BOOL tok_num(const uint8_t **tok_start, const uint8_t **tok_end, const uint8_t *line_end, uint32_t *i)
+BOOL tok_num(const uint8_t **tok_start, const uint8_t **tok_end, const uint8_t *line_end, uint16_t *i)
 {
     if (tok(tok_start, tok_end, line_end))
     {
